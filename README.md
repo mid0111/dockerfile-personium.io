@@ -53,12 +53,18 @@ $ docker build -t dockerfile/elasticsearch-1.3.4 .
   ````bash
 $ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch dockerfile/elasticsearch-1.3.4
   ````
+* Start memcached demon.__
+
+  ````bash
+$ docker run --name memcache -d memcached
+  ````
 * Start personium.io.  
 To connect Elasticsearch docker container, describe ip address on `dc-config.properties`.
 
   ````bash
 $ cd ${WORK_DIR}
-$ ES_HOST=`docker run -it --rm -p 8080:8080 --name personium --link elasticsearch:elasticsearch dockerfile/personium env | grep ELASTICSEARCH_PORT_9300_TCP_ADDR | sed -e 's/.*=\(.*\)$/\1/'`
-$ sed -e "s/=\${ELASTICSEARCH_PORT_9300_TCP_ADDR}/=${ES_HOST}/g" ./resources/dc-config.properties > ./resources/conf/dc-config.properties
-$ docker run -it --rm -p 8080:8080 --name personium -v ${WORK_DIR}/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch dockerfile/personium
+$ ES_HOST=`docker run -it --rm -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium env | grep ELASTICSEARCH_PORT_9300_TCP_ADDR | sed -e 's/.*=\(.*\)$/\1/'`
+$ MEMCACHED_HOST=`docker run -it --rm -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium env | grep MEMCACHE_PORT_11211_TCP_ADDR | sed -e 's/.*=\(.*\)$/\1/'`
+$ sed -e "s/=\${ELASTICSEARCH_PORT_9300_TCP_ADDR}/=${ES_HOST}/g" -e "s/=\${MEMCACHED_PORT_11211_TCP_ADDR}/=${MEMCACHED_HOST}/g" ./resources/dc-config.properties > ./resources/conf/dc-config.properties
+$ docker run -it --rm -p 8080:8080 --name personium -v ${WORK_DIR}/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium
   ````
