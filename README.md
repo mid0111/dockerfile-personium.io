@@ -11,6 +11,7 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 
 * [maven](https://registry.hub.docker.com/_/maven/)
 * [dockerfile / elasticsearch](https://registry.hub.docker.com/u/dockerfile/elasticsearch/)
+* [memcached](https://registry.hub.docker.com/_/memcached/)
 
 ## Installation
 
@@ -53,12 +54,19 @@ $ docker build -t dockerfile/elasticsearch-1.3.4 .
   ````bash
 $ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch dockerfile/elasticsearch-1.3.4
   ````
+* Start memcached demon.
+
+  ````bash
+$ docker run --name memcache -d memcache
+  ````
 * Start personium.io.  
 To connect Elasticsearch docker container, describe ip address on `dc-config.properties`.
 
   ````bash
 $ cd ${WORK_DIR}
-$ ES_HOST=`docker run -it --rm -p 8080:8080 --name personium --link elasticsearch:elasticsearch dockerfile/personium env | grep ELASTICSEARCH_PORT_9300_TCP_ADDR | sed -e 's/.*=\(.*\)$/\1/'`
-$ sed -e "s/=\${ELASTICSEARCH_PORT_9300_TCP_ADDR}/=${ES_HOST}/g" ./resources/dc-config.properties > ./resources/conf/dc-config.properties
-$ docker run -it --rm -p 8080:8080 --name personium -v ${WORK_DIR}/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch dockerfile/personium
+$ PERSONIUM_IO_ENV=`docker run -it --rm -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium env`
+$ ES_HOST=`echo "${PERSONIUM_IO_ENV}" | grep ELASTICSEARCH_PORT_9300_TCP_ADDR | sed -e 's/.*=\(.*\)$/\1/'`
+$ MEMCACHE_HOST=`echo "${PERSONIUM_IO_ENV}" | grep MEMCACHE_PORT_11211_TCP_ADDR | sed -e 's/.*=\(.*\)$/\1/'`
+$ sed -e "s/=\${ELASTICSEARCH_PORT_9300_TCP_ADDR}/=${ES_HOST}/g" -e "s/=\${MEMCACHE_PORT_11211_TCP_ADDR}/=${MEMCACHE_HOST}/g" ./resources/dc-config.properties > ./resources/conf/dc-config.properties
+$ docker run -it --rm -p 8080:8080 --name personium -v ${WORK_DIR}/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium
   ````
