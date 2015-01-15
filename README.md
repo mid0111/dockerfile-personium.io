@@ -57,7 +57,7 @@ $ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch dockerfile/elasti
 * Start memcached demon.
 
   ````bash
-$ docker run --name memcache -d memcache
+$ docker run --name memcache -d memcached
   ````
 * Start personium.io.  
 To connect Elasticsearch and memcached docker container, describe ip address on `dc-config.properties`.
