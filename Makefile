@@ -3,11 +3,11 @@ PERSONIUM_DIR=${WORK_DIR}/resources/work/io
 ES_DIR=${WORK_DIR}/resources/work/elasticsearch
 
 ES_ID=`docker images -q dockerfile/elasticsearch-1.3.4`
-PERSONIUM_ID=`docker images -q dockerfile/personium`
+PERSONIUM_ID=`docker images -q mid0111/personium`
 
 docker: war
-	if [ -z $(PERSONIUM_ID) ] ; then docker rmi $(PERSONIUM_ID) ; fi
-	docker build -t dockerfile/personium ${WORK_DIR}
+	if [ ! -z $(PERSONIUM_ID) ] ; then docker rmi $(PERSONIUM_ID) ; fi
+	docker build -t mid0111/personium ${WORK_DIR}
 
 war: elasticsearch
 	if [ ! -d ${PERSONIUM_DIR} ]; then git clone git@github.com:personium/io.git ${PERSONIUM_DIR}; fi
