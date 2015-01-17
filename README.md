@@ -21,30 +21,24 @@ To reduce time for downloading required libraries, mount local directory.
 If you want to build on clean environment every time, remove `-v ~/.m2:/root/.m2` option.  
 
   ````bash
-$ git clone git@github.com:mid0111/dockerfile-personium.io.git
-$ cd dockerfile-personium.io/
-$ WORK_DIR=`pwd`
-$ mkdir -p ${WORK_DIR}/resources/work; cd $_
-$ git clone git@github.com:personium/io.git
+$ git clone git@github.com:mid0111/dockerfile-personium.io.git; cd dockerfile-personium.io; WORK_DIR=`pwd`
+$ git clone git@github.com:personium/io.git ${WORK_DIR}/resources/work/io
 $ docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/core:/usr/src/core -v  ~/.m2:/root/.m2  -w /usr/src/core maven mvn clean package
 $ docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package
   ````
 * Build personium docker image.
 
   ````bash
-$ cd ${WORK_DIR}
 $ docker build -t dockerfile/personium .
   ````
 * Build Elasticsearch-1.3.4 docker image.  
 Because [dockerfile / elasticsearch](https://registry.hub.docker.com/u/dockerfile/elasticsearch/) does not support version tag now, you must build docker image for Elasticsearch 1.3.4.
 
   ```bash
-$ cd ${WORK_DIR}/resources/work
-$ git clone git@github.com:dockerfile/elasticsearch.git
-$ cd elasticsearch/
-$ sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' Dockerfile
-$ echo -e '\n\naction:\n  auto_create_index: false' >> config/elasticsearch.yml
-$ docker build -t dockerfile/elasticsearch-1.3.4 .
+$ git clone git@github.com:dockerfile/elasticsearch.git ${WORK_DIR}/resources/work/elasticsearch
+$ sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${WORK_DIR}/resources/work/elasticsearch/Dockerfile
+$ echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/config/elasticsearch.yml
+$ docker build -t dockerfile/elasticsearch-1.3.4 ${WORK_DIR}/resources/work/elasticsearch
   ```
 
 ## Usage
