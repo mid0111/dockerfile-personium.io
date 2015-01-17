@@ -17,7 +17,7 @@ war: elasticsearch
 elasticsearch: 
 	if [ ! -d ${ES_DIR} ]; then git clone git@github.com:dockerfile/elasticsearch.git ${ES_DIR}; fi
 	sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${ES_DIR}/Dockerfile
-	echo '\n\naction:\n  auto_create_index: false' >> ${ES_DIR}/config/elasticsearch.yml
+	if [ -z `grep 'auto_create_index: false' ${ES_DIR}/config/elasticsearch.yml` ]; then echo '\n\naction:\n  auto_create_index: false' >> ${ES_DIR}/config/elasticsearch.yml; fi
 	if [ -z $(ES_ID) ] ; then docker rmi $(ES_ID) ; fi
 	docker build -t dockerfile/elasticsearch-1.3.4 ${ES_DIR}
 
