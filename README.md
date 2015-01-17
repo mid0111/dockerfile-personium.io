@@ -15,6 +15,19 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 
 ## Installation
 
+### Linux or Mac OS X
+
+1. Install [Docker](https://www.docker.com/).
+2. Build docker image.
+
+  ```bash
+$ git clone git@github.com:mid0111/dockerfile-personium.io.git; cd dockerfile-personium.io
+$ make
+  ```
+
+
+### Windows
+
 1. Install [Docker](https://www.docker.com/).
 2. Build war file.  
 To reduce time for downloading required libraries, mount local directory.
@@ -57,7 +70,6 @@ $ docker run --name memcache -d memcached
 To connect Elasticsearch and memcached docker container, describe ip address on `dc-config.properties`.
 
   ````bash
-$ cd ${WORK_DIR}
 $ sh create-property.sh 
-$ docker run -it --rm -p 8080:8080 --name personium -v ${WORK_DIR}/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium
+$ docker run -it --rm -p 8080:8080 --name personium -v `pwd`/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache dockerfile/personium
   ````
