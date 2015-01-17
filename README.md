@@ -21,7 +21,7 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 2. Build docker image.
 
   ```bash
-$ git clone git@github.com:mid0111/dockerfile-personium.io.git; cd dockerfile-personium.io; WORK_DIR=`pwd`
+$ git clone git@github.com:mid0111/dockerfile-personium.io.git; cd dockerfile-personium.io
 $ make
   ```
 
