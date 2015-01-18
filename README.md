@@ -18,7 +18,7 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 See the [Docker Hub page](https://registry.hub.docker.com/u/mid0111/personium.io/) for the full readme on how to use the Docker image.
 
 
-## Installation
+## Manual installation
 
 1. Install [Docker](https://www.docker.com/).
 2. Build docker image.
