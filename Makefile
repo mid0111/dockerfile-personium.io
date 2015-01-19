@@ -2,12 +2,12 @@ WORK_DIR=$(shell pwd)
 PERSONIUM_DIR=${WORK_DIR}/resources/work/io
 ES_DIR=${WORK_DIR}/resources/work/elasticsearch
 
-ES_ID=`docker images -q dockerfile/elasticsearch-1.3.4`
-PERSONIUM_ID=`docker images -q mid0111/personium`
+ES_ID=`docker images -q elasticsearch-1.3.4`
+PERSONIUM_ID=`docker images -q personium`
 
 docker: war
 	if [ ! -z $(PERSONIUM_ID) ] ; then docker rmi $(PERSONIUM_ID) ; fi
-	docker build -t mid0111/personium ${WORK_DIR}
+	docker build -t personium ${WORK_DIR}
 
 war: elasticsearch
 	if [ ! -d ${PERSONIUM_DIR} ]; then git clone git@github.com:personium/io.git ${PERSONIUM_DIR}; fi
@@ -19,5 +19,5 @@ elasticsearch:
 	sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${ES_DIR}/Dockerfile
 	if [ -z `grep 'auto_create_index: false' ${ES_DIR}/config/elasticsearch.yml` ]; then echo '\n\naction:\n  auto_create_index: false' >> ${ES_DIR}/config/elasticsearch.yml; fi
 	if [ -z $(ES_ID) ] ; then docker rmi $(ES_ID) ; fi
-	docker build -t dockerfile/elasticsearch-1.3.4 ${ES_DIR}
+	docker build -t elasticsearch-1.3.4 ${ES_DIR}
 
