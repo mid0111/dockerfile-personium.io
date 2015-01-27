@@ -1,7 +1,7 @@
-Dockerfile for personium.This
+Dockerfile for personium.io
 =======================
 
-io repository contains Dockerfile of [personium.io](http://personium.io/) for Docker's automated build.  
+This repository contains Dockerfile of [personium.io](http://personium.io/) for Docker's automated build.  
 
 ## Base Docker Image
 
