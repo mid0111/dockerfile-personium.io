@@ -26,11 +26,23 @@ $ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch-1.3
 $ docker run --name memcache -d memcached
   ````
 * Start personium.io.  
-To connect Elasticsearch and memcached docker container, describe ip address on `dc-config.properties`.
 
   ````bash
-$ docker run -d -p 8080:8080 --name personium -v `pwd`/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+$ docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache personium
   ````
+
+
+### Override settings for personium.io
+
+To override settings for personium.io, mount direcroty contains `dc-config.properties`.
+
+1. Create personium.io config file at `<conf-dir>/dc-config.properties`.
+* Start a container by mounting custom configuration directory:
+
+  ````bash
+$ docker run -d -p 8080:8080 --name personium -v <conf-dir>:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+  ````
+
 
 ## Installation
 
