@@ -5,8 +5,6 @@ machine:
 dependencies:
   override
     - make
-    - docker info
-    - docker build -t circleci/elasticsearch .
 
 test:
   override:
