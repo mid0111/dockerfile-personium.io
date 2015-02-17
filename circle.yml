@@ -3,7 +3,8 @@ machine:
     - docker
 
 dependencies:
-  override
+  override:
+    - docker info
     - make
 
 test:
