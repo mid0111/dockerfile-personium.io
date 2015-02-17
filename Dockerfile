@@ -6,7 +6,7 @@ ADD ./resources/tomcat/setenv.sh /usr/local/tomcat/bin/
 # Deploy war file.
 ADD ./resources/work/io/core/target/dc1-core.war /usr/local/tomcat/webapps/
 ADD ./resources/work/io/engine/target/dc1-engine.war /usr/local/tomcat/webapps/
-ADD ./resources/dc-config.properties /usr/local/personium/
+ADD ./resources/conf/dc-config.properties /usr/local/personium/
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]

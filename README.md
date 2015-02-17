@@ -1,7 +1,7 @@
-Dockerfile for personium.This
+Dockerfile for personium.io
 =======================
 
-io repository contains Dockerfile of [personium.io](http://personium.io/) for Docker's automated build.  
+This repository contains Dockerfile of [personium.io](http://personium.io/) for Docker's automated build.  
 
 ## Base Docker Image
 
@@ -26,11 +26,23 @@ $ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch-1.3
 $ docker run --name memcache -d memcached
   ````
 * Start personium.io.  
-To connect Elasticsearch and memcached docker container, describe ip address on `dc-config.properties`.
 
   ````bash
-$ docker run -it --rm -p 8080:8080 --name personium -v `pwd`/resources/conf:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+$ docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache personium
   ````
+
+
+### Override settings for personium.io
+
+To override settings for personium.io, mount direcroty contains `dc-config.properties`.
+
+1. Create personium.io config file at `<conf-dir>/dc-config.properties`.
+* Start a container by mounting custom configuration directory:
+
+  ````bash
+$ docker run -d -p 8080:8080 --name personium -v <conf-dir>:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+  ````
+
 
 ## Installation
 
@@ -50,17 +62,17 @@ $ make
 2. Try below in docker shell.
   ````bash
 # Build war file.
-$ git clone git@github.com:mid0111/dockerfile-personium.io.git; cd dockerfile-personium.io; WORK_DIR=`pwd`
-$ git clone git@github.com:personium/io.git ${WORK_DIR}/resources/work/io
-$ docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/core:/usr/src/core -v  ~/.m2:/root/.m2  -w /usr/src/core maven mvn clean package
-$ docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package
+git clone https://github.com/mid0111/dockerfile-personium.io.git; cd dockerfile-personium.io; WORK_DIR=`pwd`
+git clone https://github.com/personium/io.git ${WORK_DIR}/resources/work/io
+docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/core:/usr/src/core -v  ${WORK_DIR}/resources/.m2:/root/.m2  -w /usr/src/core maven mvn clean package
+docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/engine:/usr/src/engine -v ${WORK_DIR}/resources/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package
 
 # Build personium docker image.
-$ docker build -t personium .
+docker build -t personium .
 
 # Build Elasticsearch-1.3.4 docker image.
-$ git clone git@github.com:dockerfile/elasticsearch.git ${WORK_DIR}/resources/work/elasticsearch
-$ sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${WORK_DIR}/resources/work/elasticsearch/Dockerfile
-$ echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/config/elasticsearch.yml
-$ docker build -t elasticsearch-1.3.4 ${WORK_DIR}/resources/work/elasticsearch
+git clone https://github.com/dockerfile/elasticsearch.git ${WORK_DIR}/resources/work/elasticsearch
+sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${WORK_DIR}/resources/work/elasticsearch/Dockerfile
+echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/config/elasticsearch.yml
+docker build -t elasticsearch-1.3.4 ${WORK_DIR}/resources/work/elasticsearch
   ```
