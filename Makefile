@@ -15,8 +15,8 @@ war: elasticsearch
 	docker run -it --rm --name maven -v ${PERSONIUM_DIR}/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package
 
 elasticsearch: 
-	echo $(ES_ID)
-	echo $(PERSONIUM_ID)
+	echo ${ES_ID}
+	echo ${PERSONIUM_ID}
 	echo "-------"
 	if [ ! -d ${ES_DIR} ]; then git clone https://github.com/dockerfile/elasticsearch.git ${ES_DIR}; fi
 	sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${ES_DIR}/Dockerfile
