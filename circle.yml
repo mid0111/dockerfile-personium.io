@@ -4,7 +4,7 @@ machine:
 
 dependencies:
   override
-    - make docker
+    - make
 
 test:
   override:
