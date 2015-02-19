@@ -1,6 +1,8 @@
 Dockerfile for personium.io
 =======================
 
+[![Circle CI](https://circleci.com/gh/mid0111/dockerfile-personium.io.svg?style=svg)](https://circleci.com/gh/mid0111/dockerfile-personium.io)
+
 This repository contains Dockerfile of [personium.io](http://personium.io/) for Docker's automated build.  
 
 ## Base Docker Image
