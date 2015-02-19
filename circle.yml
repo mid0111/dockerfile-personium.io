@@ -13,5 +13,5 @@ test:
     - docker run --name memcache -d memcached
     - docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache personium
     - docker inspect personium
-    - docker run maven -v $(shell pwd)/test:/usr/src/test -v  ~/.m2:/root/.m2  -w /usr/src/test maven mvn clean test -Dpersonium.base.url=http://192.168.59.103:8080/dc1-core
+    - docker run maven -v $(shell pwd)/test:/usr/src/test -v  ~/.m2:/root/.m2  -w /usr/src/test maven mvn clean test -Dpersonium.base.url=http://localhost:8080/dc1-core
 
