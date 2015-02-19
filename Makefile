@@ -11,7 +11,7 @@ docker: war
 
 war: elasticsearch
 	if [ ! -d ${PERSONIUM_DIR} ]; then git clone https://github.com/personium/io.git ${PERSONIUM_DIR};	fi
-	@irwhich mvn > /dev/null \
+	@which mvn > /dev/null \
 	&& (mvn package -f ${PERSONIUM_DIR}/core/pom.xml; mvn package -f ${PERSONIUM_DIR}/engine/pom.xml) \
 	|| (docker run -it --rm --name maven -v ${PERSONIUM_DIR}/core:/usr/src/core -v  ~/.m2:/root/.m2  -w /usr/src/core maven mvn clean package; docker run -it --rm --name maven -v ${PERSONIUM_DIR}/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package)
 
