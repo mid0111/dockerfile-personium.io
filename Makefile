@@ -4,21 +4,16 @@ ES_DIR=${WORK_DIR}/resources/work/elasticsearch
 
 ES_ID=`docker images -q elasticsearch-1.3.4`
 PERSONIUM_ID=`docker images -q personium`
-MVN_COMMAND=`which mvn`
 
 docker: war
 	if [ ! -z $(PERSONIUM_ID) ] ; then docker rmi $(PERSONIUM_ID) ; fi
 	docker build -t personium ${WORK_DIR}
 
 war: elasticsearch
-	if [ ! -d ${PERSONIUM_DIR} ]; then git clone https://github.com/personium/io.git ${PERSONIUM_DIR}; fi
-	if [ -z ${MVN_COMMAND} ]; then
-		docker run -it --rm --name maven -v ${PERSONIUM_DIR}/core:/usr/src/core -v  ~/.m2:/root/.m2  -w /usr/src/core maven mvn clean package
-		docker run -it --rm --name maven -v ${PERSONIUM_DIR}/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package
-	else
-		mvn -f ${PERSONIUM_DIR}/core/pom.xml clean package
-		mvn -f ${PERSONIUM_DIR}/engine/pom.xml clean package
-	fi
+	if [ ! -d ${PERSONIUM_DIR} ]; then git clone https://github.com/personium/io.git ${PERSONIUM_DIR};	fi
+	which mvn > /dev/null \
+	&& (mvn package -f ${PERSONIUM_DIR}/core/pom.xml; mvn package -f ${PERSONIUM_DIR}/engine/pom.xml) \
+	|| (docker run -it --rm --name maven -v ${PERSONIUM_DIR}/core:/usr/src/core -v  ~/.m2:/root/.m2  -w /usr/src/core maven mvn clean package; docker run -it --rm --name maven -v ${PERSONIUM_DIR}/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package)
 
 elasticsearch: 
 	if [ ! -d ${ES_DIR} ]; then git clone https://github.com/dockerfile/elasticsearch.git ${ES_DIR}; fi
@@ -26,4 +21,6 @@ elasticsearch:
 	if [ -z `grep 'auto_create_index: false' ${ES_DIR}/config/elasticsearch.yml` ]; then echo '\n\naction:\n  auto_create_index: false' >> ${ES_DIR}/config/elasticsearch.yml; fi
 	if [ ! -z ${ES_ID} ] ; then docker rmi ${ES_ID} ; fi
 	docker build -t elasticsearch-1.3.4 ${ES_DIR}
+
+.PHONY: docker war elasticsearch
 
