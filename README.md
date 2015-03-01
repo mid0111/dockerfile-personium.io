@@ -13,7 +13,6 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 
 * [maven](https://registry.hub.docker.com/_/maven/)
 * [dockerfile / elasticsearch](https://registry.hub.docker.com/u/dockerfile/elasticsearch/)
-* [memcached](https://registry.hub.docker.com/_/memcached/)
 
 ## Usage
 
@@ -22,15 +21,10 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
   ````bash
 $ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch-1.3.4
   ````
-* Start memcached demon.
-
-  ````bash
-$ docker run --name memcache -d memcached
-  ````
 * Start personium.io.  
 
   ````bash
-$ docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+$ docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch personium
   ````
 
 
@@ -42,7 +36,7 @@ To override settings for personium.io, mount direcroty contains `dc-config.prope
 * Start a container by mounting custom configuration directory:
 
   ````bash
-$ docker run -d -p 8080:8080 --name personium -v <conf-dir>:/usr/local/personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+$ docker run -d -p 8080:8080 --name personium -v <conf-dir>:/usr/local/personium --link elasticsearch:elasticsearch personium
   ````
 
 
@@ -78,3 +72,11 @@ sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${WORK_DIR}/resourc
 echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/config/elasticsearch.yml
 docker build -t elasticsearch-1.3.4 ${WORK_DIR}/resources/work/elasticsearch
   ```
+
+## Contribution
+
+### Test
+
+```bash
+$ docker run -it --rm -v `pwd`/test:/usr/src/test -v  $HOME/.m2:/root/.m2  -w /usr/src/test maven mvn test
+```

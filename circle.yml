@@ -10,8 +10,7 @@ dependencies:
 test:
   override:
     - docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch-1.3.4
-    - docker run --name memcache -d memcached
-    - docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch --link memcache:memcache personium
+    - docker run -d -p 8080:8080 --name personium --link elasticsearch:elasticsearch personium
     - docker inspect personium
     - mvn clean test -Dpersonium.base.url=http://localhost:8080/dc1-core -f test/pom.xml
 
