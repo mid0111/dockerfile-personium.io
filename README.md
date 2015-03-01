@@ -72,3 +72,11 @@ sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${WORK_DIR}/resourc
 echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/config/elasticsearch.yml
 docker build -t elasticsearch-1.3.4 ${WORK_DIR}/resources/work/elasticsearch
   ```
+
+## Contribution
+
+### Test
+
+```bash
+$ docker run -it --rm -v `pwd`/test:/usr/src/test -v  $HOME/.m2:/root/.m2  -w /usr/src/test maven mvn test
+```

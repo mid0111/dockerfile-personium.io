@@ -21,6 +21,7 @@ public class PersoniumResponse {
             if (entity != null) {
                 this.body = EntityUtils.toString(entity);
             }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -30,6 +31,12 @@ public class PersoniumResponse {
                 throw new RuntimeException(e);
             }
         }
+
+        System.out.println("Response=============");
+        System.out.println("code: " + this.code);
+        System.out.println("version: " + response.getFirstHeader("X-Dc-Version"));
+        System.out.println("body: " + this.body);
+        System.out.println("");
     }
 
     public int code() {
