@@ -2,7 +2,7 @@ WORK_DIR=$(shell pwd)
 PERSONIUM_DIR=${WORK_DIR}/resources/work/io
 ES_DIR=${WORK_DIR}/resources/work/elasticsearch
 
-ES_ID=`docker images -q elasticsearch-1.3.4`
+ES_ID=`docker images -q elasticsearch-1.3`
 PERSONIUM_ID=`docker images -q personium`
 
 docker: war
@@ -16,11 +16,10 @@ war: elasticsearch
 	|| (docker run -it --rm --name maven -v ${PERSONIUM_DIR}/core:/usr/src/core -v  ~/.m2:/root/.m2  -w /usr/src/core maven mvn clean package; docker run -it --rm --name maven -v ${PERSONIUM_DIR}/engine:/usr/src/engine -v ~/.m2:/root/.m2 -w /usr/src/engine maven mvn clean package)
 
 elasticsearch: 
-	if [ ! -d ${ES_DIR} ]; then git clone https://github.com/dockerfile/elasticsearch.git ${ES_DIR}; fi
-	sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${ES_DIR}/Dockerfile
-	if [ -z `grep 'auto_create_index: false' ${ES_DIR}/config/elasticsearch.yml` ]; then echo '\n\naction:\n  auto_create_index: false' >> ${ES_DIR}/config/elasticsearch.yml; fi
+	if [ ! -d ${ES_DIR} ]; then git clone https://github.com/docker-library/elasticsearch.git ${ES_DIR}; cd ${ES_DIR}/1.3; fi
+	if [ -z `grep 'auto_create_index: false' ${ES_DIR}/1.3/config/elasticsearch.yml` ]; then echo '\n\naction:\n  auto_create_index: false' >> ${ES_DIR}/1.3/config/elasticsearch.yml; fi
 	if [ ! -z ${ES_ID} ] ; then docker rmi ${ES_ID} ; fi
-	docker build -t elasticsearch-1.3.4 ${ES_DIR}
+	docker build -t elasticsearch-1.3 ${ES_DIR}/1.3
 
 .PHONY: docker war elasticsearch
 

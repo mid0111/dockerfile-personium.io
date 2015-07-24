@@ -12,7 +12,7 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 ## Using Docker Image
 
 * [maven](https://registry.hub.docker.com/_/maven/)
-* [dockerfile / elasticsearch](https://registry.hub.docker.com/u/dockerfile/elasticsearch/)
+* [docker-library / elasticsearch](https://github.com/docker-library/elasticsearch)
 
 ## Usage
 
@@ -67,10 +67,9 @@ docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/engine:/usr/sr
 docker build -t personium .
 
 # Build Elasticsearch-1.3.4 docker image.
-git clone https://github.com/dockerfile/elasticsearch.git ${WORK_DIR}/resources/work/elasticsearch
-sed -i -e 's/\(ENV ES_PKG_NAME elasticsearch-\).*/\11.3.4/g' ${WORK_DIR}/resources/work/elasticsearch/Dockerfile
-echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/config/elasticsearch.yml
-docker build -t elasticsearch-1.3.4 ${WORK_DIR}/resources/work/elasticsearch
+git clone https://github.com/docker-library/elasticsearch.git ${WORK_DIR}/resources/work/elasticsearch
+echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/1.3/config/elasticsearch.yml
+docker build -t elasticsearch-1.3 ${WORK_DIR}/resources/work/elasticsearch/1.3
   ```
 
 ## Contribution
