@@ -51,7 +51,7 @@ public class RegressionTest {
                 .token(null)
                 .body(body)
                 .exec();
-        assertThat(response.code()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+        assertThat(response.code()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
 
         Thread.sleep(1000);
 
