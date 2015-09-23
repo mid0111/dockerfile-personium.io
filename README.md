@@ -19,7 +19,7 @@ This repository contains Dockerfile of [personium.io](http://personium.io/) for 
 1. Start Elasticsearch deamon.  
  
   ````bash
-$ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch-1.3.4
+$ docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch:1.3 -Des.action.auto_create_index=false
   ````
 * Start personium.io.  
 
@@ -66,16 +66,10 @@ docker run -it --rm --name maven -v ${WORK_DIR}/resources/work/io/engine:/usr/sr
 # Build personium docker image.
 docker build -t personium .
 
-# Build Elasticsearch-1.3.4 docker image.
-git clone https://github.com/docker-library/elasticsearch.git ${WORK_DIR}/resources/work/elasticsearch
-echo -e '\n\naction:\n  auto_create_index: false' >> ${WORK_DIR}/resources/work/elasticsearch/1.3/config/elasticsearch.yml
-docker build -t elasticsearch-1.3 ${WORK_DIR}/resources/work/elasticsearch/1.3
-  ```
-
 ## Contribution
 
 ### Test
 
 ```bash
-$ docker run -it --rm -v `pwd`/test:/usr/src/test -v  $HOME/.m2:/root/.m2  -w /usr/src/test maven mvn test
+$ docker run -it --rm -v `pwd`/test:/usr/src/test -v  $HOME/.m2:/root/.m2  -w /usr/src/test --link personium:personium maven mvn test -Dpersonium.base.url=http://personium:8080/dc1-core
 ```
